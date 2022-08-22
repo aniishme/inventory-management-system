@@ -1,9 +1,8 @@
-import express, { Router, Request, Response, NextFunction } from "express";
+import { Router } from "express";
+import { createUser } from "../controllers/auth.controller";
 
 const authRouter = Router();
 
-authRouter.get("/", (req: Request, res: Response) => {
-  return res.json({ message: "Success" });
-});
+authRouter.post("/register", createUser);
 
 export default authRouter;
