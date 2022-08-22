@@ -25,3 +25,26 @@ export const createUser = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const loginUser = async (req: Request, res: Response) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        username: req.body.username,
+      },
+    });
+
+    if (!user) return res.status(400).json({ message: "User not found" });
+
+    const isMatch = await bcryptjs.compare(req.body.password, user.password);
+
+    if (!isMatch)
+      return res.status(400).json({ message: "Incorrect password" });
+
+    // const token = user.generateToken();
+
+    res.status(200).json({ user });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
