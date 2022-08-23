@@ -2,11 +2,16 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { validationResult } from "express-validator";
 
 const prisma = new PrismaClient();
 
 export const createUser = async (req: Request, res: Response) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new Error(errors.array()[0].msg);
+    }
     const user = await prisma.user.findUnique({
       where: {
         username: req.body.username,
@@ -21,7 +26,7 @@ export const createUser = async (req: Request, res: Response) => {
       data: { ...req.body, password: hashedPassword },
     });
 
-    res.status(200).json(newUser);
+    return res.status(200).json(newUser);
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
@@ -48,6 +53,6 @@ export const loginUser = async (req: Request, res: Response) => {
       .status(200)
       .json({ user: { name: user.name, username: user.username }, token });
   } catch (error: any) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error });
   }
 };
