@@ -11,10 +11,11 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   name      String
   username  String   @unique
   password  String
+  salt      String
   createdAt DateTime @default(now())
   Role      Role     @default(MANAGER)
 }
