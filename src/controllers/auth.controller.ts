@@ -20,10 +20,11 @@ export const createUser = async (req: Request, res: Response) => {
 
     if (user) return res.status(400).json({ message: "User already exists" });
 
-    const hashedPassword = await bcryptjs.hash(req.body.password, 10);
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(req.body.password, salt);
 
     const newUser = await prisma.user.create({
-      data: { ...req.body, password: hashedPassword },
+      data: { ...req.body, password: hashedPassword, salt: salt },
     });
 
     return res.status(200).json(newUser);
