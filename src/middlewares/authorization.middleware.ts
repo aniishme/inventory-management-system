@@ -34,7 +34,6 @@ export const verifyAdmin = async (
 
       const user: any = jwt.verify(token, process.env.SECRET_KEY as string);
 
-      console.log(user.role);
       if (!user) return res.status(401).json({ message: "Unauthorized" });
 
       if (user.role != "ADMIN")

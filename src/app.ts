@@ -13,9 +13,9 @@ app.use(cookieParser());
 
 app.use("/auth", authRouter);
 app.use("/", verifyAdmin, (req, res) => {
-  // console.log(req.cookies);
   res.send("Hello World");
 });
-app.listen(8000, () => {
+
+app.listen(process.env.PORT, () => {
   console.log("App running");
 });
