@@ -2,16 +2,11 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { validationResult } from "express-validator";
 
 const prisma = new PrismaClient();
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      throw new Error(errors.array()[0].msg);
-    }
     const user = await prisma.user.findUnique({
       where: {
         username: req.body.username,
