@@ -7,8 +7,9 @@ export const verifyUser = async (
   next: NextFunction
 ) => {
   try {
-    if (await req.cookies.session) {
-      const token = await req.cookies.session.token;
+    if ((await req.cookies.session) || req.headers.authorization) {
+      const token =
+        (await req.cookies.session.token) || req.headers.authorization;
 
       const user: any = jwt.verify(token, process.env.SECRET_KEY as string);
 
@@ -29,8 +30,9 @@ export const verifyAdmin = async (
   next: NextFunction
 ) => {
   try {
-    if (await req.cookies.session) {
-      const token = await req.cookies.session.token;
+    if ((await req.cookies.session) || req.headers.authorization) {
+      const token =
+        (await req.cookies.session.token) || req.headers.authorization;
 
       const user: any = jwt.verify(token, process.env.SECRET_KEY as string);
 
