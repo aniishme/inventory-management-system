@@ -40,8 +40,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
     const isMatch = await bcryptjs.compare(req.body.password, user.password);
 
-    if (!isMatch)
-      return res.status(400).json({ message: "Incorrect password" });
+    if (!isMatch) return res.status(400).json({ message: "User not found" });
 
     let token = jwt.sign(user, process.env.SECRET_KEY as string);
 
