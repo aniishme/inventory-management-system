@@ -12,27 +12,33 @@ type User = {
   role: string;
 };
 
+const verifyAccessToken = async (req: Request, res: Response) => {
+  const token = (await req.cookies.session.token) || req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const user = jwt.verify(
+    token,
+    process.env.SECRET_KEY as string
+  ) as unknown as User;
+
+  if (!user) res.status(401).json({ message: "Unauthorized" });
+
+  return user;
+};
+
 export const verifyUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    if ((await req.cookies.session) || req.headers.authorization) {
-      const token =
-        (await req.cookies.session.token) || req.headers.authorization;
+    const user = await verifyAccessToken(req, res);
 
-      const user = jwt.verify(
-        token,
-        process.env.SECRET_KEY as string
-      ) as unknown as User;
+    req.body.user = user;
 
-      if (!user) return res.status(401).json({ message: "Unauthorized" });
-      req.body.user = user;
-      next();
-    } else {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
+    next();
   } catch (error) {
     return res.status(500).json({ message: error });
   }
@@ -44,25 +50,14 @@ export const verifyAdmin = async (
   next: NextFunction
 ) => {
   try {
-    if ((await req.cookies.session) || req.headers.authorization) {
-      const token =
-        (await req.cookies.session.token) || req.headers.authorization;
+    const user = (await verifyAccessToken(req, res)) as User;
 
-      const user = jwt.verify(
-        token,
-        process.env.SECRET_KEY as string
-      ) as unknown as User;
-
-      if (!user) return res.status(401).json({ message: "Unauthorized" });
-
-      if (user.role != "ADMIN")
-        return res.status(401).json({ message: "Unauthorized" });
-
-      req.body.user = user;
-      next();
-    } else {
+    if (user.role != "ADMIN")
       return res.status(401).json({ message: "Unauthorized" });
-    }
+
+    req.body.user = user;
+
+    next();
   } catch (error) {
     return res.status(500).json({ message: error });
   }
