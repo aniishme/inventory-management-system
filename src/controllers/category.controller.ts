@@ -48,6 +48,29 @@ export const updateCategory = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteCategory = async (req: Request, res: Response) => {
+  try {
+    const category = await prisma.category.findUnique({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!category)
+      return res.status(404).json({ message: "Category not found" });
+
+    await prisma.category.delete({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    return res.status(200).json({ message: "deleted" });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export const getCategoryByID = async (req: Request, res: Response) => {
   try {
     const category = await prisma.category.findUnique({
