@@ -24,6 +24,30 @@ export const createCategory = async (req: Request, res: Response) => {
   }
 };
 
+export const updateCategory = async (req: Request, res: Response) => {
+  try {
+    const category = await prisma.category.findUnique({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!category)
+      return res.status(404).json({ message: "Category not found" });
+
+    const updatedCategory = await prisma.category.update({
+      where: {
+        id: req.params.id,
+      },
+      data: { ...req.body },
+    });
+
+    return res.status(201).json({ updatedCategory, message: "updated" });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export const getCategoryByID = async (req: Request, res: Response) => {
   try {
     const category = await prisma.category.findUnique({
