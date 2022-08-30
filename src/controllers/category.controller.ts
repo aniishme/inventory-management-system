@@ -1,13 +1,18 @@
 import { Request, Response } from "express";
 import prisma from "../db";
 
+const checkCategory = async (req: Request, res: Response) => {
+  const category = await prisma.category.findUnique({
+    where: {
+      name: req.body.name,
+    },
+  });
+  return category;
+};
+
 export const createCategory = async (req: Request, res: Response) => {
   try {
-    const category = await prisma.category.findUnique({
-      where: {
-        name: req.body.name,
-      },
-    });
+    const category = await checkCategory(req, res);
 
     if (category)
       return res.status(400).json({ message: "Category name must be unique" });
@@ -24,11 +29,7 @@ export const createCategory = async (req: Request, res: Response) => {
 
 export const updateCategory = async (req: Request, res: Response) => {
   try {
-    const category = await prisma.category.findUnique({
-      where: {
-        id: req.params.id,
-      },
-    });
+    const category = await checkCategory(req, res);
 
     if (!category)
       return res.status(404).json({ message: "Category not found" });
@@ -48,11 +49,7 @@ export const updateCategory = async (req: Request, res: Response) => {
 
 export const deleteCategory = async (req: Request, res: Response) => {
   try {
-    const category = await prisma.category.findUnique({
-      where: {
-        id: req.params.id,
-      },
-    });
+    const category = await checkCategory(req, res);
 
     if (!category)
       return res.status(404).json({ message: "Category not found" });
