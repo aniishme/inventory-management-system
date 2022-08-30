@@ -1,10 +1,21 @@
-import express, { Express, Request, Response } from "express";
-import router from "./routes/items.route";
+import express from "express";
+import authRouter from "./routes/auth.route";
+import cookieParser from "cookie-parser";
+import {
+  verifyUser,
+  verifyAdmin,
+} from "./middlewares/authorization.middleware";
 
-const app: Express = express();
+const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
 
-app.use("/", router);
+app.use("/auth", authRouter);
+app.get("/", verifyAdmin, (req, res) => {
+  res.send("Hello World");
+});
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("App running");
 });
