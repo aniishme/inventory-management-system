@@ -13,17 +13,13 @@ type User = {
 };
 
 const verifyAccessToken = async (req: Request, res: Response) => {
-  const token = (await req.cookies.session.token) || req.headers.authorization;
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
+  const token =
+    (await req.cookies.session?.token) || req.headers?.authorization;
 
   const user = jwt.verify(
     token,
     process.env.SECRET_KEY as string
   ) as unknown as User;
-
-  if (!user) res.status(401).json({ message: "Unauthorized" });
 
   return user;
 };
@@ -39,8 +35,8 @@ export const verifyUser = async (
     req.body.user = user;
 
     next();
-  } catch (error) {
-    return res.status(500).json({ message: error });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -58,7 +54,7 @@ export const verifyAdmin = async (
     req.body.user = user;
 
     next();
-  } catch (error) {
-    return res.status(500).json({ message: error });
+  } catch (error: any) {
+    if (error) return res.status(500).send({ message: error.message });
   }
 };
