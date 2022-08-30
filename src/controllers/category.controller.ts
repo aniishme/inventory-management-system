@@ -75,6 +75,9 @@ export const getCategoryByID = async (req: Request, res: Response) => {
       where: {
         id: req.params.id,
       },
+      include: {
+        items: true,
+      },
     });
 
     if (!category)
