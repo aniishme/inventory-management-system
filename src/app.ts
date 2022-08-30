@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/auth", authRouter);
-app.use("/", verifyAdmin, (req, res) => {
+app.get("/", verifyAdmin, (req, res) => {
   res.send("Hello World");
 });
 
