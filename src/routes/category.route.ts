@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
+import { validate } from "../utils/zod.validate";
+
 import {
   createCategory,
   getCategoryByID,
@@ -11,28 +13,23 @@ const categoryRouter = Router();
 
 const dataSchema = z.object({
   body: z.object({
-    fullname: z.string({
-      required_error: "Fullname is required",
-    }),
-    username: z
-      .string({
-        required_error: "Username is required",
-      })
-      .min(3, "Username must be at least 3 characters long"),
-    password: z
-      .string({
-        required_error: "Password is required",
-      })
-      .min(6, "Password must be at least 6 characters long"),
-    role: z.string({
-      required_error: "Role is required",
+    name: z.string({
+      required_error: "Name is required",
     }),
   }),
 });
 
-categoryRouter.post("/", createCategory);
-categoryRouter.put("/:id", updateCategory);
-categoryRouter.delete("/:id", deleteCategory);
+const paramSchema = z.object({
+  params: z.object({
+    id: z.string({
+      required_error: "ID is required",
+    }),
+  }),
+});
+
+categoryRouter.post("/", validate(dataSchema), createCategory);
+categoryRouter.put("/:id", validate(paramSchema), updateCategory);
+categoryRouter.delete("/:id", validate(dataSchema), deleteCategory);
 categoryRouter.get("/:id", getCategoryByID);
 categoryRouter.get("/", getAllCategory);
 
