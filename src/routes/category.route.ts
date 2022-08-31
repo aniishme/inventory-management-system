@@ -19,17 +19,9 @@ const dataSchema = z.object({
   }),
 });
 
-const paramSchema = z.object({
-  params: z.object({
-    id: z.string({
-      required_error: "ID is required",
-    }),
-  }),
-});
-
 categoryRouter.post("/", validate(dataSchema), createCategory);
-categoryRouter.put("/:id", validate(paramSchema), updateCategory);
-categoryRouter.delete("/:id", validate(dataSchema), deleteCategory);
+categoryRouter.put("/:id", validate(dataSchema), updateCategory);
+categoryRouter.delete("/:id", deleteCategory);
 categoryRouter.get("/:id", getCategoryByID);
 categoryRouter.get("/", getAllCategory);
 
