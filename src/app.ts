@@ -2,6 +2,7 @@ import express from "express";
 import authRouter from "./routes/auth.route";
 import cookieParser from "cookie-parser";
 import categoryRouter from "./routes/category.route";
+import itemRouter from "./routes/item.route";
 
 import {
   verifyUser,
@@ -15,6 +16,7 @@ app.use(cookieParser());
 
 app.use("/auth", authRouter);
 app.use("/category", categoryRouter);
+app.use("/item", itemRouter);
 app.get("/", verifyAdmin, (req, res) => {
   res.send("Hello World");
 });
