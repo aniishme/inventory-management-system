@@ -64,6 +64,9 @@ export const getItemById = async (req: Request, res: Response) => {
       where: {
         id: req.params.id,
       },
+      include: {
+        category: true,
+      },
     });
 
     if (!item) return res.status(404).json({ message: "Item not found" });
@@ -76,7 +79,11 @@ export const getItemById = async (req: Request, res: Response) => {
 
 export const getAllItem = async (req: Request, res: Response) => {
   try {
-    const items = await prisma.item.findMany();
+    const items = await prisma.item.findMany({
+      include: {
+        category: true,
+      },
+    });
 
     return res.status(200).json(items);
   } catch (error: any) {
