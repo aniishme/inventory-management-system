@@ -23,6 +23,9 @@ const dataSchema = z.object({
     categoryId: z.string({
       required_error: "Category is required",
     }),
+    image: z.string({
+      required_error: "Image is required",
+    }),
   }),
 });
 
