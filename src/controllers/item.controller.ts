@@ -13,6 +13,29 @@ export const createItem = async (req: Request, res: Response) => {
   }
 };
 
+export const updateItem = async (req: Request, res: Response) => {
+  try {
+    const item = await prisma.item.findUnique({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!item) return res.status(404).json({ message: "Item not found" });
+
+    const updatedItem = await prisma.item.update({
+      where: {
+        id: req.params.id,
+      },
+      data: { ...req.body },
+    });
+
+    return res.status(201).json({ updatedItem, message: "updated" });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export const getItemById = async (req: Request, res: Response) => {
   try {
     const item = await prisma.item.findUnique({
