@@ -1,4 +1,7 @@
 import { Router } from "express";
+import { z } from "zod";
+import { validate } from "../utils/zod.validate";
+
 import {
   createItem,
   getItemById,
@@ -9,7 +12,21 @@ import {
 
 const itemRouter = Router();
 
-itemRouter.post("/", createItem);
+const dataSchema = z.object({
+  body: z.object({
+    name: z.string({
+      required_error: "Name is required",
+    }),
+    price: z.number({
+      required_error: "Price is required",
+    }),
+    categoryId: z.string({
+      required_error: "Category is required",
+    }),
+  }),
+});
+
+itemRouter.post("/", validate(dataSchema), createItem);
 itemRouter.put("/:id", updateItem);
 itemRouter.delete("/:id", deleteItem);
 itemRouter.get("/:id", getItemById);
