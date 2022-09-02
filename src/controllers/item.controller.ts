@@ -12,3 +12,13 @@ export const createItem = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const getAllItem = async (req: Request, res: Response) => {
+  try {
+    const items = await prisma.item.findMany();
+
+    return res.status(200).json(items);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
