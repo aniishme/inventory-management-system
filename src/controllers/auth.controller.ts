@@ -40,7 +40,14 @@ export const loginUser = async (req: Request, res: Response) => {
 
     if (!isMatch) return res.status(400).json({ message: "User not found" });
 
-    let token = jwt.sign(user, process.env.SECRET_KEY as string);
+    const tokenData = {
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      role: user.role,
+    };
+
+    let token = jwt.sign(tokenData, process.env.SECRET_KEY as string);
 
     res.cookie(
       "session",
