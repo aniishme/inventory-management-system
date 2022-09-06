@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../db";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { verifyAccessToken } from "../utils/verify.accesstoken";
 
 export const createUser = async (req: Request, res: Response) => {
   try {
@@ -48,14 +49,24 @@ export const loginUser = async (req: Request, res: Response) => {
     };
 
     let token = jwt.sign(tokenData, process.env.SECRET_KEY as string);
-
+    const cookieAge = 60 * 60 * 24 * 7;
     res.cookie(
       "session",
-      { user: { name: user.name, username: user.username }, token },
-      { httpOnly: true }
+      { token },
+      { httpOnly: true, path: "/", maxAge: cookieAge }
     );
     return res.status(200).json({ message: "Cookie Set" });
   } catch (error: any) {
     return res.status(500).json({ message: error });
+  }
+};
+
+export const loggedInUser = async (req: Request, res: Response) => {
+  try {
+    const data = await verifyAccessToken(req, res);
+    console.log(data);
+    return res.status(200).json(data);
+  } catch (error: any) {
+    return res.status(401).json({ message: error.message });
   }
 };
