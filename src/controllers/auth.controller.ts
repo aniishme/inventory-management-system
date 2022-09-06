@@ -64,9 +64,11 @@ export const loginUser = async (req: Request, res: Response) => {
 export const loggedInUser = async (req: Request, res: Response) => {
   try {
     const data = await verifyAccessToken(req, res);
-    console.log(data);
     return res.status(200).json(data);
   } catch (error: any) {
-    return res.status(401).json({ message: error.message });
+    return res
+      .status(401)
+      .clearCookie("session")
+      .json({ message: error.message });
   }
 };
