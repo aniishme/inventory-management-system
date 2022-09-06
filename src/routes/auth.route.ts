@@ -10,7 +10,7 @@ const authRouter = Router();
 
 const dataSchema = z.object({
   body: z.object({
-    fullname: z.string({
+    name: z.string({
       required_error: "Fullname is required",
     }),
     username: z
