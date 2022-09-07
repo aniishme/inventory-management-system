@@ -21,7 +21,14 @@ export const createUser = async (req: Request, res: Response) => {
       data: { ...req.body, password: hashedPassword, salt: salt },
     });
 
-    return res.status(200).json(newUser);
+    const resData = {
+      id: newUser.id,
+      name: newUser.name,
+      username: newUser.username,
+      role: newUser.role,
+    };
+
+    return res.status(200).json(resData);
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
