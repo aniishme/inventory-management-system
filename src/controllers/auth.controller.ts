@@ -56,11 +56,11 @@ export const loginUser = async (req: Request, res: Response) => {
     };
 
     let token = jwt.sign(tokenData, process.env.SECRET_KEY as string);
-    const cookieAge = 60 * 60 * 24 * 7;
+    const ONE_WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
     res.cookie(
       "session",
       { token },
-      { httpOnly: true, path: "/", maxAge: cookieAge }
+      { httpOnly: true, path: "/", maxAge: ONE_WEEK_IN_MS }
     );
     return res.status(200).json({ message: "Cookie Set" });
   } catch (error: any) {
