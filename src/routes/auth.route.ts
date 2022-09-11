@@ -3,6 +3,7 @@ import {
   createUser,
   loggedInUser,
   loginUser,
+  logOutUser,
 } from "../controllers/auth.controller";
 import { z } from "zod";
 import { validate } from "../utils/zod.validate";
@@ -32,5 +33,6 @@ const dataSchema = z.object({
 authRouter.post("/register", validate(dataSchema), createUser);
 authRouter.post("/login", loginUser);
 authRouter.get("/me", loggedInUser);
+authRouter.get("/logout", logOutUser);
 
 export default authRouter;

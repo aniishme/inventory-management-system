@@ -79,3 +79,12 @@ export const loggedInUser = async (req: Request, res: Response) => {
       .json({ message: error.message });
   }
 };
+
+export const logOutUser = async (req: Request, res: Response) => {
+  try {
+    res.clearCookie("session");
+    return res.status(200).json({ message: "Session Ended" });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
