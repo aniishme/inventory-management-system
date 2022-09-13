@@ -1,12 +1,17 @@
 import { Router } from "express";
-import { createUser, loginUser } from "../controllers/auth.controller";
+import {
+  createUser,
+  loggedInUser,
+  loginUser,
+  logOutUser,
+} from "../controllers/auth.controller";
 import { z } from "zod";
 import { validate } from "../utils/zod.validate";
 const authRouter = Router();
 
 const dataSchema = z.object({
   body: z.object({
-    fullname: z.string({
+    name: z.string({
       required_error: "Fullname is required",
     }),
     username: z
@@ -27,5 +32,7 @@ const dataSchema = z.object({
 
 authRouter.post("/register", validate(dataSchema), createUser);
 authRouter.post("/login", loginUser);
+authRouter.get("/me", loggedInUser);
+authRouter.get("/logout", logOutUser);
 
 export default authRouter;

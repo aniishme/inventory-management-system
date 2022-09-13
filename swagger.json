@@ -1,0 +1,470 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "My User Project CRUD",
+    "description": "My User Project Application API",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:8000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "User",
+      "description": "API for users in the system"
+    },
+    {
+      "name": "Auth",
+      "description": "API to authenticate users in the system"
+    },
+    {
+      "name": "Item",
+      "description": "Api for items in the system"
+    },
+    {
+      "name": "Category",
+      "description": "Api for Category in the system"
+    }
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["User"],
+        "description": "Create new user in system",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "New user is created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "description": "Generate access token for the system",
+        "parameters": [
+          {
+            "name": "login",
+            "in": "body",
+            "description": "User that we want to authenticate",
+            "schema": {
+              "$ref": "#/definitions/Auth"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Cookie is set",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "description": "Verify access token for the system",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "session",
+            "in": "cookie",
+            "description": "User token that we want to authenticate",
+            "schema": {
+              "properties": {
+                "session": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User that is logged in",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/item": {
+      "post": {
+        "tags": ["Item"],
+        "description": "Create item in system",
+        "parameters": [
+          {
+            "name": "item",
+            "in": "body",
+            "description": "Item that we want to create",
+            "schema": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "image": {
+                  "type": "string"
+                },
+                "categoryId": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Item that is created",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Item"],
+        "description": "Get item in system",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Item that is returned",
+            "schema": {
+              "$ref": "#/definitions/Items"
+            }
+          }
+        }
+      }
+    },
+    "/item/{id}": {
+      "put": {
+        "tags": ["Item"],
+        "description": "Update item in the system",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Item that we want to update"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Fields that we want to update",
+            "schema": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "image": {
+                  "type": "string"
+                },
+                "categoryId": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Item that is created",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Item"],
+        "description": "Get item in system by id",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Item that we want to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item that is returned",
+            "schema": {
+              "$ref": "#/definitions/Item"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Item"],
+        "description": "Delete item in system by id",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Item that we want to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Item that is returned",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/category": {
+      "post": {
+        "tags": ["Category"],
+        "description": "Create category in system",
+        "parameters": [
+          {
+            "name": "item",
+            "in": "body",
+            "description": "Category that we want to create",
+            "schema": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "category that is created",
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Category"],
+        "description": "Get all Category in system",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Category that is returned",
+            "schema": {
+              "$ref": "#/definitions/Categories"
+            }
+          }
+        }
+      }
+    },
+    "/category/{id}": {
+      "put": {
+        "tags": ["Category"],
+        "description": "Update Category in the system",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Category that we want to update"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Fields that we want to update",
+            "schema": {
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Category that is updated",
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Category"],
+        "description": "Get Category in system by id",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Item that we want to get"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category that is returned",
+            "schema": {
+              "$ref": "#/definitions/Category"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Category"],
+        "description": "Delete Category in system by id",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Category that we want to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Category that is returned",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "definitions": {
+    "User": {
+      "required": ["name", "username", "password", "role"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "password": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "Auth": {
+      "required": ["username", "password"],
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "Users": {
+      "type": "array",
+      "$ref": "#/definitions/User"
+    },
+    "Item": {
+      "required": ["name", "price", "categoryId", "image"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string"
+        },
+        "categroyId": {
+          "type": "string"
+        }
+      }
+    },
+    "Category": {
+      "required": ["name"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "uniqueItems": true
+        }
+      }
+    },
+    "Items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Item"
+      }
+    },
+    "Categories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Category"
+      }
+    }
+  }
+}
