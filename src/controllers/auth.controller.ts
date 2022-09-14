@@ -65,7 +65,6 @@ export const loginUser = async (req: Request, res: Response) => {
         path: "/",
         maxAge: ONE_WEEK_IN_MS,
         sameSite: "none",
-        secure: true,
       }
     );
     return res.status(200).json({ message: "Cookie Set" });
