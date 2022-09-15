@@ -74,6 +74,23 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 };
 
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await prisma.user.findMany();
+    const resData = users.map((user) => {
+      return {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        role: user.role,
+      };
+    });
+    return res.status(200).json(resData);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export const loggedInUser = async (req: Request, res: Response) => {
   try {
     const data = await verifyAccessToken(req, res);

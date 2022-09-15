@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createUser,
+  getAllUsers,
   loggedInUser,
   loginUser,
   logOutUser,
@@ -34,5 +35,6 @@ authRouter.post("/register", validate(dataSchema), createUser);
 authRouter.post("/login", loginUser);
 authRouter.get("/me", loggedInUser);
 authRouter.get("/logout", logOutUser);
+authRouter.get("/users", getAllUsers);
 
 export default authRouter;
