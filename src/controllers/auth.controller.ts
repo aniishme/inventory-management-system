@@ -88,7 +88,12 @@ export const loggedInUser = async (req: Request, res: Response) => {
 
 export const logOutUser = async (req: Request, res: Response) => {
   try {
-    res.clearCookie("session");
+    res.clearCookie("session", {
+      httpOnly: true,
+      path: "/",
+      sameSite: "none",
+      secure: true,
+    });
     return res.status(200).json({ message: "Session Ended" });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
