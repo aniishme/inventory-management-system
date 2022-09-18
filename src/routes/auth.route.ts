@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createUser,
+  deleteUser,
   getAllUsers,
   loggedInUser,
   loginUser,
@@ -8,6 +9,8 @@ import {
 } from "../controllers/auth.controller";
 import { z } from "zod";
 import { validate } from "../utils/zod.validate";
+import { verify } from "crypto";
+import { verifyAdmin } from "../middlewares/authorization.middleware";
 const authRouter = Router();
 
 const dataSchema = z.object({
@@ -31,10 +34,11 @@ const dataSchema = z.object({
   }),
 });
 
-authRouter.post("/register", validate(dataSchema), createUser);
+authRouter.post("/register", [verifyAdmin, validate(dataSchema)], createUser);
 authRouter.post("/login", loginUser);
 authRouter.get("/me", loggedInUser);
 authRouter.get("/logout", logOutUser);
-authRouter.get("/users", getAllUsers);
+authRouter.get("/users", verifyAdmin, getAllUsers);
+authRouter.delete("/users/:id", verifyAdmin, deleteUser);
 
 export default authRouter;

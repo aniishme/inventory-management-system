@@ -91,9 +91,43 @@ export const getAllUsers = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    if (!user) return res.status(400).json({ message: "User not found" });
+
+    await prisma.user.delete({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    return res.status(200).json({ message: "User deleted" });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export const loggedInUser = async (req: Request, res: Response) => {
   try {
     const data = await verifyAccessToken(req, res);
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: data.id,
+      },
+    });
+    if (!user)
+      return res
+        .status(401)
+        .clearCookie("session")
+        .json({ message: "Unauthorized" });
+
     return res.status(200).json(data);
   } catch (error: any) {
     return res

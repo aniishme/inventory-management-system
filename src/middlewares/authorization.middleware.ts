@@ -8,9 +8,6 @@ export const verifyUser = async (
 ) => {
   try {
     const user = await verifyAccessToken(req, res);
-
-    req.body.user = user;
-
     next();
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
@@ -27,8 +24,6 @@ export const verifyAdmin = async (
 
     if (user.role != "ADMIN")
       return res.status(401).json({ message: "Unauthorized" });
-
-    req.body.user = user;
 
     next();
   } catch (error: any) {
