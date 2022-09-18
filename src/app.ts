@@ -25,11 +25,8 @@ app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 
 app.use("/auth", authRouter);
-app.use("/category", categoryRouter);
-app.use("/item", itemRouter);
-app.get("/", verifyAdmin, (req, res) => {
-  res.send("Hello World");
-});
+app.use("/category", verifyUser, categoryRouter);
+app.use("/item", verifyUser, itemRouter);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
